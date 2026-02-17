@@ -1,0 +1,771 @@
+/* Tailwind CSS Directives */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Google Fonts - Inter */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+/* Global Base Styles */
+@layer base {
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
+    @apply bg-gray-50 text-gray-900 antialiased;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold leading-tight;
+  }
+
+  a {
+    @apply transition-colors duration-200;
+  }
+}
+
+/* Reusable Component Classes */
+@layer components {
+
+  /* Page section wrapper */
+  .section {
+    @apply py-12 px-4;
+  }
+
+  /* Card base style */
+  .card {
+    @apply bg-white rounded-xl shadow-card p-6 transition-shadow duration-300 hover:shadow-card-hover;
+  }
+
+  /* ── About Us card — sky-blue animated border + 3D hover projection ── */
+  .card-about {
+    position: relative;
+    z-index: 0;
+    @apply bg-white rounded-xl p-6 space-y-4;
+    /* Entrance: fades + lifts up from below */
+    opacity: 0;
+    transform: translateY(40px) scale(0.98);
+    /* 3-D hover lift transition */
+    transition:
+      transform  0.35s cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: transform, box-shadow;
+  }
+
+  /* Animate in once visible */
+  .card-about-in {
+    animation: aboutCardEnter 0.75s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+
+  /* Hover — lift + deep shadow (3-D projection) */
+  .card-about:hover {
+    transform: translateY(-10px) scale(1.015) rotateX(1deg);
+    box-shadow:
+      0 32px 64px -12px rgba(14, 165, 233, 0.25),
+      0 16px 32px -8px  rgba(14, 165, 233, 0.15),
+      0  4px 12px -2px  rgba(0,   0,   0,   0.08);
+  }
+
+  /* ── Spinning sky-blue conic-gradient border ── */
+  /* Uses a second CSS custom property so it doesn't clash with --angle (silver nav) */
+  .card-about::before {
+    content: '';
+    position: absolute;
+    inset: -3px;                      /* border thickness = 3px          */
+    border-radius: 0.875rem;          /* slightly larger than card radius */
+    background: conic-gradient(
+      from var(--sky-angle, 0deg),
+      #0ea5e9 0%,                     /* sky-500                          */
+      #7dd3fc 12%,                    /* sky-300  (bright highlight)      */
+      #e0f2fe 22%,                    /* sky-100  (near-white glint)      */
+      #ffffff 30%,                    /* pure white sparkle               */
+      #bae6fd 42%,                    /* sky-200                          */
+      #38bdf8 55%,                    /* sky-400                          */
+      #0ea5e9 68%,                    /* sky-500                          */
+      #7dd3fc 80%,                    /* sky-300                          */
+      #0ea5e9 100%                    /* back to sky-500                  */
+    );
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    padding: 3px;
+    z-index: -1;
+    animation: rotateSkyBorder 3s linear infinite;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+
+  /* White inner fill so the border shows as just a ring */
+  .card-about::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 0.75rem;
+    background: white;
+    z-index: -1;
+  }
+
+  /* Once entered, reveal the border */
+  .card-about-in::before {
+    opacity: 1;
+  }
+
+  /* On hover, speed up the spin */
+  .card-about:hover::before {
+    animation-duration: 1.4s;
+  }
+
+  /* Primary button */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2
+           bg-blue-600 text-white font-semibold
+           px-6 py-3 rounded-lg
+           hover:bg-blue-700 active:bg-blue-800
+           focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
+           transition-all duration-200;
+  }
+
+  /* Secondary button */
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2
+           bg-white text-blue-600 font-semibold border border-blue-600
+           px-6 py-3 rounded-lg
+           hover:bg-blue-50 active:bg-blue-100
+           focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
+           transition-all duration-200;
+  }
+
+  /* ── Mobile nav items ── */
+  .nav-link-mobile {
+    @apply w-full text-left flex items-center gap-3 px-4 py-3 rounded-lg font-medium
+           text-gray-600 transition-colors duration-200;
+  }
+  .nav-link-mobile:hover {
+    @apply bg-gray-100 text-gray-900;
+  }
+
+  /* Active mobile item: animated silver shimmer on the left border */
+  .nav-link-mobile-active {
+    @apply w-full text-left flex items-center gap-3 px-4 py-3 rounded-lg font-medium
+           text-blue-700 bg-blue-50 relative overflow-hidden;
+    border-left: 3px solid transparent;
+    border-image: linear-gradient(
+      180deg,
+      #a8a8a8, #e8e8e8, #ffffff, #c0c0c0, #a8a8a8
+    ) 1;
+    border-image-slice: 1;
+    animation: shimmerBorderLeft 2s linear infinite;
+    background-image:
+      linear-gradient(to right, #eff6ff, #eff6ff),
+      linear-gradient(180deg, #a8a8a8, #e8e8e8, #ffffff, #c0c0c0, #a8a8a8);
+    background-origin: padding-box, border-box;
+    background-clip: padding-box, border-box;
+    border-left: 3px solid transparent;
+  }
+
+  /* Shared base */
+  .nav-link,
+  .nav-link-active {
+    @apply relative flex items-center gap-2 px-4 py-2 rounded-lg font-medium overflow-hidden;
+    z-index: 0;
+  }
+
+  /* The spinning conic-gradient pseudo-element (the "border") */
+  .nav-link::before,
+  .nav-link-active::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 0.5rem;
+    padding: 2px;
+    background: conic-gradient(
+      from var(--angle, 0deg),
+      #c0c0c0 0%,
+      #e8e8e8 15%,
+      #f5f5f5 25%,
+      #a8a8a8 40%,
+      #d4d4d4 55%,
+      #ffffff 65%,
+      #b0b0b0 80%,
+      #c0c0c0 100%
+    );
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    z-index: -1;
+  }
+
+  /* Inner fill sits above the border layer */
+  .nav-link::after,
+  .nav-link-active::after {
+    content: '';
+    position: absolute;
+    inset: 2px;
+    border-radius: 6px;
+    z-index: -1;
+  }
+
+  /* Default state */
+  .nav-link {
+    @apply text-gray-600;
+  }
+  .nav-link::after {
+    background: #ffffff;
+  }
+
+  /* Hover — reveal spinning silver border */
+  .nav-link:hover {
+    @apply text-gray-900;
+  }
+  .nav-link:hover::before {
+    opacity: 1;
+    animation: rotateBorder 1.8s linear infinite;
+  }
+  .nav-link:hover::after {
+    background: #f9fafb;
+  }
+
+  /* Active page — permanently spinning silver border + blue fill */
+  .nav-link-active {
+    @apply text-white;
+  }
+  .nav-link-active::before {
+    opacity: 1;
+    animation: rotateBorder 2.5s linear infinite;
+  }
+  .nav-link-active::after {
+    background: #2563eb;
+  }
+
+  /* Section heading */
+  .section-title {
+    @apply text-3xl font-bold text-gray-800 mb-2;
+  }
+
+  .section-subtitle {
+    @apply text-lg text-gray-500 mb-8;
+  }
+
+  /* Icon badge */
+  .icon-badge {
+    @apply w-12 h-12 rounded-xl flex items-center justify-center mb-4 shrink-0;
+  }
+
+  /* Gradient hero */
+  .hero-gradient {
+    @apply bg-gradient-to-r from-orange-600 via-green-600 to-blue-600;
+  }
+
+  /* ── Country cards — shared base ── */
+  .card-vietnam,
+  .card-india {
+    position: relative;
+    z-index: 0;
+    @apply rounded-xl p-8 overflow-hidden;
+
+    /* 3-D hover lift */
+    transition:
+      transform  0.38s cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 0.38s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: transform, box-shadow;
+  }
+
+  /* Hover — project card towards the viewer */
+  .card-vietnam:hover,
+  .card-india:hover {
+    transform: translateY(-12px) scale(1.02) rotateX(1.5deg);
+    box-shadow:
+      0 40px 80px -16px rgba(236, 72, 153, 0.30),
+      0 20px 40px -8px  rgba(236, 72, 153, 0.18),
+      0  6px 16px -2px  rgba(0, 0, 0, 0.10);
+  }
+
+  /* ── Background image layer (opaque overlay) ── */
+  .card-vietnam::after,
+  .card-india::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: 0.75rem;
+    background-size: cover;
+    background-position: center;
+    opacity: 0.13;               /* opaque-but-subtle image wash */
+    transition: opacity 0.38s ease;
+  }
+  .card-vietnam:hover::after,
+  .card-india:hover::after {
+    opacity: 0.22;               /* reveal more image on hover  */
+  }
+
+  /* Vietnam — Ha Long Bay */
+  .card-vietnam::after {
+    background-image: url('https://images.unsplash.com/photo-1528127269322-539801943592?w=800&q=70&auto=format&fit=crop');
+    background-color: #fff0f6;   /* pinkish base colour          */
+  }
+
+  /* India — Taj Mahal */
+  .card-india::after {
+    background-image: url('https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=800&q=70&auto=format&fit=crop');
+    background-color: #fdf2f8;
+  }
+
+  /* ── Colour fills (sit above image, below content) ── */
+  /* Vietnam pinkish gradient */
+  .card-vietnam {
+    background: linear-gradient(135deg,
+      rgba(252, 231, 243, 0.92) 0%,
+      rgba(253, 242, 248, 0.90) 50%,
+      rgba(250, 232, 255, 0.92) 100%
+    );
+    border: 2px solid transparent;    /* room for conic border       */
+  }
+
+  /* India pinkish-warm gradient */
+  .card-india {
+    background: linear-gradient(135deg,
+      rgba(253, 242, 248, 0.92) 0%,
+      rgba(250, 232, 255, 0.90) 50%,
+      rgba(252, 231, 243, 0.92) 100%
+    );
+    border: 2px solid transparent;
+  }
+
+  /* ── Spinning conic-gradient shimmer border ── */
+  /* Uses ::before — sits behind content, clipped to ring by mask */
+  .card-vietnam::before,
+  .card-india::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: 0.875rem;
+    z-index: 1;                  /* above ::after bg image */
+    padding: 2px;
+    background: conic-gradient(
+      from var(--cc-angle, 0deg),
+      #f472b6 0%,                /* pink-400                */
+      #e879f9 10%,               /* fuchsia-400 — highlight */
+      #ffffff 20%,               /* white sparkle           */
+      #f9a8d4 30%,               /* pink-300                */
+      #c084fc 45%,               /* purple-400              */
+      #f0abfc 58%,               /* fuchsia-300             */
+      #ffffff 67%,               /* white sparkle           */
+      #fb7185 78%,               /* rose-400                */
+      #f472b6 100%               /* back to pink            */
+    );
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    animation: rotateCountryBorder 3.5s linear infinite;
+    pointer-events: none;
+  }
+
+  /* Speed up spin on hover */
+  .card-vietnam:hover::before,
+  .card-india:hover::before {
+    animation-duration: 1.6s;
+  }
+
+  /* ── Country card entrance animations ── */
+  .country-card-left {
+    opacity: 0;
+    transform: translateX(-60px) scale(0.97);
+    transition: none;
+  }
+  .country-card-left-in {
+    animation: countryCardLeft 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+
+  .country-card-right {
+    opacity: 0;
+    transform: translateX(60px) scale(0.97);
+    transition: none;
+  }
+  .country-card-right-in {
+    animation: countryCardRight 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+
+  /* Fact row — cascades in after card */
+  .fact-row {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  .fact-row-in {
+    animation: factRowIn 0.45s ease forwards;
+  }
+
+  /* ── Wave subtitle ── */
+  /* Each character is wrapped in a <span> and gets this class */
+  .wave-char {
+    display: inline-block;
+    animation: waveChar 2.4s ease-in-out infinite;
+  }
+  /* Pause for 3 s between wave cycles — achieved via long animation-duration
+     with most of the time at the resting position */
+
+  /* Form input */
+  .form-input {
+    @apply w-full px-4 py-2.5 border border-gray-300 rounded-lg
+           text-gray-800 placeholder-gray-400
+           focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
+           transition duration-200;
+  }
+
+  /* Form label */
+  .form-label {
+    @apply block text-sm font-semibold text-gray-700 mb-1.5;
+  }
+
+  /* Divider */
+  .divider {
+    @apply border-t border-gray-200 my-6;
+  }
+
+  /* Badge */
+  .badge {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-medium;
+  }
+
+  /* ── Section caption animations ── */
+
+  /* Title / subtitle — starts hidden, slides up on .caption-reveal-in */
+  .caption-reveal {
+    opacity: 0;
+    transform: translateY(22px);
+    transition: none;
+  }
+  .caption-reveal-in {
+    animation: captionSlideUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+
+  /* Animated underline bar */
+  .caption-bar {
+    @apply block h-1 rounded-full mb-4 mt-1;
+    width: 0;
+    transition: none;
+  }
+  .caption-bar-in {
+    animation: captionBarGrow 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+
+  /* Page-level h1 header (Services, Investment, Trading, Contact pages) */
+  .page-header-title {
+    @apply text-4xl font-bold text-gray-800 mb-0;
+    opacity: 0;
+    transform: translateY(24px) scale(0.97);
+  }
+  .page-header-title-in {
+    animation: captionPopIn 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+
+  /* Page-level subtitle */
+  .page-header-sub {
+    @apply text-xl text-gray-500;
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  .page-header-sub-in {
+    animation: captionSlideUp 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+
+  /* Card / sub-heading inside cards */
+  .card-heading {
+    opacity: 0;
+    transform: translateX(-12px);
+  }
+  .card-heading-in {
+    animation: captionSlideRight 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+
+  /* ── Hero section ── */
+  .hero-root {
+    @apply relative w-full overflow-hidden rounded-2xl shadow-2xl;
+    height: 560px;
+  }
+  @media (min-width: 768px) {
+    .hero-root { height: 640px; }
+  }
+
+  .hero-bg {
+    @apply absolute inset-0 bg-cover bg-center;
+    will-change: opacity, transform;
+  }
+  .hero-bg-exit {
+    animation: heroBgExit 0.9s ease forwards;
+  }
+  .hero-bg-enter {
+    animation: heroBgEnter 1.2s ease forwards;
+  }
+
+  .hero-overlay {
+    @apply absolute inset-0;
+    transition: background 0.8s ease;
+  }
+
+  .hero-particles {
+    @apply absolute inset-0 pointer-events-none overflow-hidden;
+  }
+  .hero-particle {
+    @apply absolute bottom-0 rounded-full bg-white;
+    animation: floatUp 4s ease-in infinite;
+  }
+
+  .hero-content {
+    @apply absolute inset-0 flex flex-col items-center justify-center px-6 pb-16;
+    transition: opacity 0.35s ease, transform 0.35s ease;
+  }
+  .hero-text-in  { opacity: 1; transform: translateY(0); }
+  .hero-text-out { opacity: 0; transform: translateY(12px); }
+
+  .hero-badge {
+    @apply inline-flex items-center gap-2 text-white text-sm font-bold
+           px-4 py-1.5 rounded-full shadow-lg tracking-wide uppercase;
+    animation: badgePop 0.5s cubic-bezier(0.34,1.56,0.64,1) both;
+  }
+
+  .hero-ampersand {
+    @apply inline-block;
+    animation: ampSpin 0.6s ease both;
+  }
+
+  .hero-chip {
+    @apply flex items-center gap-2 bg-white/15 backdrop-blur-sm
+           text-white text-sm font-medium px-4 py-2 rounded-full
+           border border-white/20 shadow;
+    animation: chipSlideUp 0.5s ease both;
+  }
+
+  .hero-dots {
+    @apply absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-2;
+  }
+  .hero-dot {
+    @apply w-8 h-2 rounded-full bg-white/30 hover:bg-white/60
+           transition-all duration-300;
+  }
+  .hero-dot-active {
+    @apply w-10 bg-white/80;
+  }
+
+  .hero-progress-track {
+    @apply absolute bottom-0 left-0 right-0 h-0.5 bg-white/10;
+  }
+  .hero-progress-bar {
+    @apply h-full bg-white/60;
+    animation: progressFill 5s linear forwards;
+  }
+
+  .hero-scroll-cue {
+    @apply absolute bottom-10 right-6;
+  }
+}
+
+/* Utility Overrides */
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 0.4s ease-in-out;
+  }
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Rotates the conic-gradient angle to create the spinning silver border */
+@property --angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+/* Sky-blue border rotation — separate property so it doesn't clash with nav --angle */
+@property --sky-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+/* Country card border spin — separate property */
+@property --cc-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes rotateCountryBorder {
+  from { --cc-angle: 0deg; }
+  to   { --cc-angle: 360deg; }
+}
+
+@keyframes rotateSkyBorder {
+  from { --sky-angle: 0deg; }
+  to   { --sky-angle: 360deg; }
+}
+
+@keyframes aboutCardEnter {
+  from { opacity: 0; transform: translateY(40px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0)    scale(1); }
+}
+
+/* ── Wave subtitle keyframe ──
+   Total cycle = 5.4 s: 1.5 s wave, 3.9 s still
+   Characters 0..N get staggered animation-delay in JS */
+@keyframes waveChar {
+  0%, 100%         { transform: translateY(0);      color: inherit; }
+  /* rise */
+  8%               { transform: translateY(-9px);   color: #ec4899; }   /* pink-500  */
+  16%              { transform: translateY(-14px);  color: #a855f7; }   /* purple-500*/
+  24%              { transform: translateY(-9px);   color: #06b6d4; }   /* cyan-500  */
+  32%              { transform: translateY(0); }
+  /* still for the remainder */
+  32.1%, 99.9%     { transform: translateY(0);      color: inherit; }
+}
+
+@keyframes rotateBorder {
+  from { --angle: 0deg; }
+  to   { --angle: 360deg; }
+}
+
+/* Mobile nav: left-edge silver shimmer for active item */
+@keyframes shimmerLeft {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+
+/* ── Hero keyframes ── */
+
+/* Background crossfade */
+@keyframes heroBgEnter {
+  from { opacity: 0; transform: scale(1.06); }
+  to   { opacity: 1; transform: scale(1); }
+}
+@keyframes heroBgExit {
+  from { opacity: 1; transform: scale(1); }
+  to   { opacity: 0; transform: scale(0.97); }
+}
+
+/* Ken-Burns slow zoom on active slide */
+@keyframes kenBurns {
+  from { transform: scale(1); }
+  to   { transform: scale(1.08); }
+}
+
+/* Floating particles */
+@keyframes floatUp {
+  0%   { transform: translateY(0)   translateX(0)    scale(1);   opacity: 0; }
+  10%  { opacity: 0.6; }
+  80%  { opacity: 0.3; }
+  100% { transform: translateY(-520px) translateX(30px) scale(0.4); opacity: 0; }
+}
+
+/* Country badge pop */
+@keyframes badgePop {
+  from { opacity: 0; transform: scale(0.7) translateY(-8px); }
+  to   { opacity: 1; transform: scale(1)   translateY(0); }
+}
+
+/* Ampersand spin-in */
+@keyframes ampSpin {
+  from { opacity: 0; transform: rotateY(90deg) scale(0.6); }
+  to   { opacity: 1; transform: rotateY(0deg)  scale(1); }
+}
+
+/* Chip slide up */
+@keyframes chipSlideUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Progress bar fill */
+@keyframes progressFill {
+  from { width: 0%; }
+  to   { width: 100%; }
+}
+
+/* ── Section caption keyframes ── */
+
+/* Title slides up and fades in */
+@keyframes captionSlideUp {
+  from { opacity: 0; transform: translateY(22px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Page-level title pops in with slight scale */
+@keyframes captionPopIn {
+  from { opacity: 0; transform: translateY(24px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0)    scale(1); }
+}
+
+/* Underline bar grows from left to right */
+@keyframes captionBarGrow {
+  from { width: 0;    opacity: 0; }
+  to   { width: 56px; opacity: 1; }
+}
+
+/* Card sub-heading slides in from left */
+@keyframes captionSlideRight {
+  from { opacity: 0; transform: translateX(-12px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* ── Country card entrance keyframes ── */
+
+/* Card slides in from left (Vietnam) */
+@keyframes countryCardLeft {
+  from { opacity: 0; transform: translateX(-60px) scale(0.97); }
+  to   { opacity: 1; transform: translateX(0)     scale(1); }
+}
+
+/* Card slides in from right (India) */
+@keyframes countryCardRight {
+  from { opacity: 0; transform: translateX(60px) scale(0.97); }
+  to   { opacity: 1; transform: translateX(0)    scale(1); }
+}
+
+/* Individual fact row cascades in after card */
+@keyframes factRowIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Moving pink shimmer on the top border */
+@keyframes shimmerPink {
+  0%   { background-position:   0% 50%; }
+  100% { background-position: 200% 50%; }
+}
