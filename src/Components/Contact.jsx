@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { MapPin, Phone, Mail } from "lucide-react";
-import SectionHeader from "../SectionHeader";
-import { useScrollReveal } from "../hooks/useScrollReveal";
+import SectionHeader from "./SectionHeader";
+import { useScrollReveal } from "./useScrollReveal";
 
 const contactItems = [
 	{

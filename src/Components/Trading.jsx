@@ -1,6 +1,6 @@
 import React from "react";
-import SectionHeader from "../SectionHeader";
-import { useScrollReveal } from "../hooks/useScrollReveal";
+import SectionHeader from "./SectionHeader";
+import { useScrollReveal } from "./useScrollReveal";
 
 const products = [
 	{

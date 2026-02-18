@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import NavBar from "./components/Navigation/NavBar";
-import Home from "./components/Home/Home";
-import Services from "./components/Services/Services";
-import Investment from "./components/Investment/Investment";
-import Trading from "./components/Trading/Trading";
-import Contact from "./components/Contact/Contact";
-import Footer from "./components/Footer/Footer";
+import NavBar from "./Components/NavBar";
+import Home from "./Components/Home";
+import Services from "./Components/Services";
+import Investment from "./Components/Investment";
+import Trading from "./Components/Trading";
+import Contact from "./Components/Contact";
+import Footer from "./Components/Footer";
 
 const navigation = [
 	{ id: "home", label: "Home" },

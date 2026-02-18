@@ -1,7 +1,7 @@
 import React from "react";
 import { TrendingUp, Building2 } from "lucide-react";
-import SectionHeader from "../SectionHeader";
-import { useScrollReveal } from "../hooks/useScrollReveal";
+import SectionHeader from "./SectionHeader";
+import { useScrollReveal } from "./useScrollReveal";
 
 const consultancySteps = [
 	"Market research and feasibility studies",

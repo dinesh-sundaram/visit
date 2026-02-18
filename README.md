@@ -46,13 +46,16 @@ vietnam-india-project/
 │   ├── App.jsx                     # Root component — routing & state
 │   ├── index.css                   # Tailwind directives + global styles
 │   └── components/
-│       ├──Navigation/NavBar.jsx
-│       ├──Home/Home.jsx
-│       ├──Services/Services.jsx
-│       ├──Investment/Investment.jsx
-│       ├──Trading/Trading.jsx
-│       ├──Contact/Contact.jsx
-│       └──Footer/Footer.jsx
+│       ├──NavBar.jsx
+│       ├──Home.jsx
+│       ├──Services.jsx
+│       ├──Investment.jsx
+│       ├──Trading.jsx
+│       ├──Contact.jsx
+│       |──Footer.jsx
+|       |──SectionHeader.jsx
+|       |──useScrollReveal.jsx
+|
 └── .gitignore
 ```
 

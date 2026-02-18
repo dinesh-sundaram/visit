@@ -1,7 +1,7 @@
 import React from "react";
 import { Building2, Globe, Package, TrendingUp } from "lucide-react";
-import SectionHeader from "../SectionHeader";
-import { useScrollReveal } from "../hooks/useScrollReveal";
+import SectionHeader from "./SectionHeader";
+import { useScrollReveal } from "./useScrollReveal";
 
 const services = [
 	{
